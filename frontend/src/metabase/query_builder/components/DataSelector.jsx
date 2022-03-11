@@ -19,6 +19,7 @@ import Icon from "metabase/components/Icon";
 import PopoverWithTrigger from "metabase/components/PopoverWithTrigger";
 import AccordionList from "metabase/core/components/AccordionList";
 import LoadingAndErrorWrapper from "metabase/components/LoadingAndErrorWrapper";
+import DimensionInfoPopover from "metabase/components/MetadataInfo/DimensionInfoPopover";
 
 import MetabaseSettings from "metabase/lib/settings";
 import { getSchemaName } from "metabase/lib/schema";
@@ -1512,6 +1513,20 @@ const TablePicker = ({
 };
 
 class FieldPicker extends Component {
+  renderItemIcon = item => {
+    console.log("renderItemIcon", item.field);
+    if (!item.field) {
+      return null;
+    }
+
+    const dimension = item.field.dimension();
+    return (
+      <DimensionInfoPopover dimension={dimension}>
+        <Icon name={dimension.icon()} size={18} />
+      </DimensionInfoPopover>
+    );
+  };
+
   render() {
     const {
       isLoading,
@@ -1570,11 +1585,7 @@ class FieldPicker extends Component {
               : false
           }
           itemIsClickable={item => item.field}
-          renderItemIcon={item =>
-            item.field ? (
-              <Icon name={item.field.dimension().icon()} size={18} />
-            ) : null
-          }
+          renderItemIcon={this.renderItemIcon}
         />
       </div>
     );
