@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useMemo } from "react";
+import React, { useMemo, forwardRef } from "react";
 import { t } from "ttag";
 import cx from "classnames";
+import _ from "underscore";
 
 import EntityMenu from "metabase/components/EntityMenu";
 import Swapper from "metabase/components/Swapper";
@@ -20,18 +21,21 @@ import {
   PinButton,
 } from "./EntityItem.styled";
 
-function EntityIconCheckBox({
-  item,
-  variant,
-  icon,
-  pinned,
-  selectable,
-  selected,
-  showCheckbox,
-  disabled,
-  onToggleSelected,
-  ...props
-}) {
+const EntityIconCheckBox = forwardRef(function EntityIconCheckBox(
+  {
+    item,
+    variant,
+    icon,
+    pinned,
+    selectable,
+    selected,
+    showCheckbox,
+    disabled,
+    onToggleSelected,
+    ...props
+  },
+  ref,
+) {
   const iconSize = variant === "small" ? 12 : 18;
   const handleClick = e => {
     e.preventDefault();
@@ -40,6 +44,7 @@ function EntityIconCheckBox({
 
   return (
     <EntityIconWrapper
+      ref={ref}
       isPinned={pinned}
       model={item.model}
       onClick={selectable ? handleClick : null}
@@ -68,7 +73,7 @@ function EntityIconCheckBox({
       )}
     </EntityIconWrapper>
   );
-}
+});
 
 function EntityItemName({ name, variant }) {
   return (
@@ -171,6 +176,7 @@ const EntityItem = ({
   pinned,
   loading,
   disabled,
+  renderIconWrapper = _.identity,
 }) => {
   const icon = useMemo(() => ({ name: iconName }), [iconName]);
 
@@ -182,16 +188,18 @@ const EntityItem = ({
       variant={variant}
       disabled={disabled}
     >
-      <EntityIconCheckBox
-        item={item}
-        variant={variant}
-        icon={icon}
-        pinned={pinned}
-        selectable={selectable}
-        selected={selected}
-        disabled={disabled}
-        onToggleSelected={onToggleSelected}
-      />
+      {renderIconWrapper(
+        <EntityIconCheckBox
+          item={item}
+          variant={variant}
+          icon={icon}
+          pinned={pinned}
+          selectable={selectable}
+          selected={selected}
+          disabled={disabled}
+          onToggleSelected={onToggleSelected}
+        />,
+      )}
 
       <div className="overflow-hidden">
         <EntityItemName name={name} />

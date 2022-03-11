@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback } from "react";
 import PropTypes from "prop-types";
 import { t } from "ttag";
 import { color } from "metabase/lib/colors";
@@ -9,6 +9,7 @@ import Database from "metabase/entities/databases";
 import EntityItem from "metabase/components/EntityItem";
 import Icon from "metabase/components/Icon";
 import { Grid } from "metabase/components/Grid";
+import TableInfoPopover from "metabase/components/MetadataInfo/TableInfoPopover";
 
 import { ANALYTICS_CONTEXT } from "../../constants";
 import BrowseHeader from "../BrowseHeader";
@@ -78,6 +79,15 @@ const itemPropTypes = {
 };
 
 const TableBrowserItem = ({ table, dbId, xraysEnabled }) => {
+  const renderIconWrapper = useCallback(
+    iconContent => (
+      <TableInfoPopover placement="bottom-start" table={table}>
+        {iconContent}
+      </TableInfoPopover>
+    ),
+    [table],
+  );
+
   return (
     <EntityItem
       item={table}
@@ -95,6 +105,7 @@ const TableBrowserItem = ({ table, dbId, xraysEnabled }) => {
           />
         )
       }
+      renderIconWrapper={renderIconWrapper}
     />
   );
 };
