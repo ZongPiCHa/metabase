@@ -100,7 +100,7 @@
       (integrations.common/sync-group-memberships! user #{group-1} #{})
       (is (= #{"All Users"} (group-memberships user)))))
 
-  ;; when user mapping group are enabled, user can only manage groups using authentication provider
+  ;; when groups mapping are enabled, user can only manage groups from authentication provider
   (testing "are unmapped groups removed when removing group memberships?"
     (with-user-in-groups [group-1 {:name (str ::group-1)}
                           user    [group-1]]
@@ -117,15 +117,8 @@
              (group-memberships user)))))
 
   (mt/with-test-user :crowberto
-    (testing "Admin should be synced just like a normal grup"
-      (testing "are admins synced?"
-        (with-user-in-groups [user]
-          (integrations.common/sync-group-memberships! user [(group/admin)] #{})
-          (is (= #{"All Users"}
-                 (group-memberships user)))))
-
-      (testing "are administrators removed appropriately?"
-        (with-user-in-groups [user [(group/admin)]]
-          (integrations.common/sync-group-memberships! user [] #{})
-          (is (= #{"All Users"}
-                 (group-memberships user))))))))
+    (testing "Admin should be synced just like a normal group"
+      (with-user-in-groups [user [(group/admin)]]
+        (integrations.common/sync-group-memberships! user [] #{})
+        (is (= #{"All Users"}
+               (group-memberships user)))))))

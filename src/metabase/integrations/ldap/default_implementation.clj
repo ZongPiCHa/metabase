@@ -52,7 +52,7 @@
    dn                      :- su/NonBlankString
    uid                     :- su/NonBlankString
    {:keys [group-base]}    :- i/LDAPSettings
-    group-membership-filter :- su/NonBlankString]
+   group-membership-filter :- su/NonBlankString]
   (when group-base
     (let [results (ldap-client/search
                    ldap-connection
@@ -99,7 +99,7 @@
   "Translate a set of a user's group DNs to a set of MB group IDs using the configured mappings."
   [ldap-groups              :- (s/maybe [su/NonBlankString])
    {:keys [group-mappings]} :- (select-keys i/LDAPSettings [:group-mappings s/Keyword])]
-   (-> group-mappings
+  (-> group-mappings
       (select-keys (map #(DN. (str %)) ldap-groups))
       vals
       flatten

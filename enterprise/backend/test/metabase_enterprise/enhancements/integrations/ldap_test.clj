@@ -78,7 +78,7 @@
                   :groups     ["cn=Engineering,ou=Groups,dc=metabase,dc=com"]}
                  (ldap/find-user "sbrown20"))))
 
-        #_(testing "find by email with custom group membership filter"
+        (testing "find by email with custom group membership filter"
           (is (= {:dn         "cn=Sally Brown,ou=People,dc=metabase,dc=com"
                   :first-name "Sally"
                   :last-name  "Brown"
